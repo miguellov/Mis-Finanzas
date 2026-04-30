@@ -62,6 +62,12 @@
             <option value="Casa">🏠 Casa</option>
             <option value="Entretenimiento">🎮 Entretenimiento</option>
           </select>
+          <select id="fuenteIngreso">
+  <option value="">Tipo de Ingreso</option>
+  <option value="ML Studio">🎧 ML Studio</option>
+  <option value="Longport">✈️ Longport</option>
+  <option value="Extra">💼 Extra</option>
+</select>
 
           <select id="tipoGasto">
             <option value="variable">Variable</option>
@@ -91,9 +97,9 @@
 
     <!-- NAV BAR (tipo app) -->
     <nav class="bottom-nav">
-      <button onclick="cambiarPantalla('home')">🏠</button>
-      <button onclick="cambiarPantalla('reportes')">📊</button>
-      <button onclick="cambiarPantalla('historial')">📋</button>
+      <button onclick="cambiarVista('home')">🏠</button>
+      <button onclick="cambiarVista('reportes')">📊</button>
+      <button onclick="cambiarVista('historial')">📋</button>
     </nav>
 
   </div>
