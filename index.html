@@ -56,6 +56,20 @@
             <option value="Entretenimiento">🎮 Entretenimiento</option>
           </select>
 
+          <select id="metodoPago">
+            <option value="">💳 Método de pago</option>
+            <option value="Debito">Tarjeta de débito</option>
+            <option value="Credito">Tarjeta de crédito</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Transferencia">Transferencia</option>
+          </select>
+
+          <select id="cuenta">
+            <option value="">💰 Ubicación del dinero</option>
+            <option value="efectivo">💵 Efectivo</option>
+            <option value="banco">🏦 Cuenta bancaria</option>
+          </select>
+
           <select id="fuenteIngreso">
             <option value="">Tipo de Ingreso</option>
             <option value="ML Studio">🎧 ML Studio</option>
@@ -73,17 +87,16 @@
             <button class="gasto" onclick="agregar('gasto')">- Gasto</button>
           </div>
         </div>
-
       </section>
 
       <!-- REPORTES -->
-      <<section id="reportes" class="screen">
-  <h2>📊 Gastos por categoría</h2>
-  <canvas id="grafica"></canvas>
+      <section id="reportes" class="screen">
+        <h2>📊 Gastos por categoría</h2>
+        <canvas id="grafica"></canvas>
 
-  <h2>💰 Ingresos por fuente</h2>
-  <canvas id="graficaIngresos"></canvas>
-</section>
+        <h2>💰 Ingresos por fuente</h2>
+        <canvas id="graficaIngresos"></canvas>
+      </section>
 
       <!-- HISTORIAL -->
       <section id="historial" class="screen">
@@ -93,7 +106,6 @@
 
     </main>
 
-    <!-- NAV -->
     <nav class="bottom-nav">
       <button onclick="cambiarVista('home')">🏠</button>
       <button onclick="cambiarVista('reportes')">📊</button>
