@@ -2,101 +2,104 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mis Finanzas</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+
+  <!-- Icons (usa tu logo.png si ya lo tienes) -->
+  <link rel="icon" href="logo.png">
+
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+  <div class="app">
 
-  <div class="container">
+    <!-- HEADER -->
+    <header class="header">
+      <h1>💰 Mis Finanzas</h1>
+      <p id="fechaActual"></p>
+    </header>
 
-    <h1>💰 Mis Finanzas</h1>
+    <!-- MAIN (pantallas) -->
+    <main>
 
-    <!-- RESUMEN PRINCIPAL -->
-    <div class="resumen-grid">
-      <div class="card">
-        <h3>💰 Ingresos</h3>
-        <p id="ingresos">RD$ 0</p>
-      </div>
+      <!-- HOME -->
+      <section id="home" class="screen active">
+        <div class="balance-card">
+          <h2 id="balance">RD$ 0</h2>
+          <p>Balance total</p>
+        </div>
 
-      <div class="card">
-        <h3>🧾 Gastos</h3>
-        <p id="gastos">RD$ 0</p>
-      </div>
+        <div class="resumen-grid">
+          <div class="card">
+            <h3>Ingresos</h3>
+            <p id="ingresos">RD$ 0</p>
+          </div>
+          <div class="card">
+            <h3>Gastos</h3>
+            <p id="gastos">RD$ 0</p>
+          </div>
+          <div class="card">
+            <h3>Fijos</h3>
+            <p id="fijos">RD$ 0</p>
+          </div>
+        </div>
 
-      <div class="card">
-        <h3>📊 Balance</h3>
-        <p id="balance">RD$ 0</p>
-      </div>
-    </div>
+        <!-- FORM -->
+        <div class="form">
+          <input id="descripcion" placeholder="Descripción">
+          <input id="monto" type="number" placeholder="Monto">
 
-    <!-- FIJOS VS VARIABLES -->
-    <div class="resumen-grid">
-      <div class="card">
-        <h3>🏠 Fijos</h3>
-        <p id="fijos">RD$ 0</p>
-      </div>
+          <select id="categoria">
+            <option value="General">General</option>
+            <option value="Comida">🍔 Comida</option>
+            <option value="Transporte">🚗 Transporte</option>
+            <option value="Casa">🏠 Casa</option>
+            <option value="Entretenimiento">🎮 Entretenimiento</option>
+          </select>
 
-      <div class="card">
-        <h3>🔁 Variables</h3>
-        <p id="variables">RD$ 0</p>
-      </div>
-    </div>
+          <select id="tipoGasto">
+            <option value="variable">Variable</option>
+            <option value="fijo">Fijo</option>
+          </select>
 
-    <!-- FORMULARIO -->
-    <div class="form">
-      <input type="text" id="descripcion" placeholder="Descripción">
-      <input type="number" id="monto" placeholder="Monto">
+          <div class="buttons">
+            <button class="ingreso" onclick="agregar('ingreso')">+ Ingreso</button>
+            <button class="gasto" onclick="agregar('gasto')">- Gasto</button>
+          </div>
+        </div>
+      </section>
 
-      <select id="categoria">
-        <option value="General">General</option>
-        <option value="Comida">🍔 Comida</option>
-        <option value="Transporte">🚗 Transporte</option>
-        <option value="Casa">🏠 Casa</option>
-        <option value="Entretenimiento">🎮 Entretenimiento</option>
-      </select>
+      <!-- REPORTES -->
+      <section id="reportes" class="screen">
+        <h2>📊 Reportes</h2>
+        <canvas id="grafica"></canvas>
+      </section>
 
-      <!-- TIPO DE GASTO -->
-      <select id="tipoGasto">
-        <option value="variable">🔁 Variable</option>
-        <option value="fijo">🏠 Fijo</option>
-      </select>
+      <!-- HISTORIAL -->
+      <section id="historial" class="screen">
+        <h2>📋 Movimientos</h2>
+        <ul id="lista"></ul>
+      </section>
 
-      <!-- TIPO DE INGRESO -->
-      <select id="tipoIngreso">
-        <option value="fijo">💼 Fijo</option>
-        <option value="servicio">🎧 Servicio (ML Studio)</option>
-        <option value="extra">💸 Extra</option>
-      </select>
+    </main>
 
-      <div class="buttons">
-        <button class="ingreso" onclick="agregar('ingreso')">➕ Ingreso</button>
-        <button class="gasto" onclick="agregar('gasto')">➖ Gasto</button>
-      </div>
-    </div>
-
-    <!-- GRÁFICA -->
-    <canvas id="grafica"></canvas>
-
-    <!-- CATEGORÍAS -->
-    <div class="categorias">
-      <h3>📊 Gastos por categoría</h3>
-      <ul id="listaCategorias"></ul>
-    </div>
-
-    <!-- INGRESOS POR TIPO -->
-    <div class="categorias">
-      <h3>💼 Ingresos por tipo</h3>
-      <ul id="listaIngresosTipo"></ul>
-    </div>
-
-    <!-- LISTA DE MOVIMIENTOS -->
-    <ul id="lista"></ul>
+    <!-- NAV BAR (tipo app) -->
+    <nav class="bottom-nav">
+      <button onclick="cambiarPantalla('home')">🏠</button>
+      <button onclick="cambiarPantalla('reportes')">📊</button>
+      <button onclick="cambiarPantalla('historial')">📋</button>
+    </nav>
 
   </div>
 
-  <!-- SCRIPTS -->
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="module" src="app.js"></script>
-
 </body>
 </html>

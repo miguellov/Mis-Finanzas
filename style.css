@@ -1,52 +1,45 @@
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  color: white;
   margin: 0;
+  font-family: system-ui;
+  background: #0f172a;
+  color: white;
 }
 
-/* CONTENEDOR */
-.container {
-  max-width: 400px;
+.app {
+  max-width: 500px;
   margin: auto;
-  padding: 20px;
+  padding-bottom: 70px;
 }
 
-h1 {
+.header {
   text-align: center;
-  margin-bottom: 20px;
+  padding: 15px;
 }
 
-/* RESUMEN */
+.balance-card {
+  background: #1e293b;
+  margin: 10px;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+}
+
 .resumen-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
-  margin-bottom: 20px;
+  padding: 10px;
 }
 
 .card {
-  background: #111827;
-  padding: 15px;
-  border-radius: 12px;
+  background: #1e293b;
+  padding: 10px;
+  border-radius: 10px;
   text-align: center;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.4);
 }
 
-.card h3 {
-  margin: 0;
-  font-size: 13px;
-  color: #94a3b8;
-}
-
-.card p {
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: 5px;
-}
-
-/* FORM */
 .form {
+  padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -58,10 +51,9 @@ input, select {
   border: none;
   background: #1e293b;
   color: white;
-  outline: none;
+  width: 100%;
 }
 
-/* BOTONES */
 .buttons {
   display: flex;
   gap: 10px;
@@ -70,87 +62,37 @@ input, select {
 button {
   flex: 1;
   padding: 12px;
-  border-radius: 10px;
   border: none;
+  border-radius: 10px;
   font-weight: bold;
-  cursor: pointer;
-  transition: transform 0.1s ease, opacity 0.2s;
 }
 
-button:hover {
-  transform: scale(1.03);
-  opacity: 0.9;
-}
+.ingreso { background: #22c55e; }
+.gasto { background: #ef4444; }
 
-.ingreso {
-  background: #22c55e;
-}
-
-.gasto {
-  background: #ef4444;
-}
-
-/* GRÁFICA */
-canvas {
-  margin-top: 20px;
-}
-
-/* CATEGORÍAS */
-.categorias {
-  margin-top: 20px;
-}
-
-.categorias h3 {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-#listaCategorias li {
+/* NAV tipo app */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  max-width: 500px;
   display: flex;
-  justify-content: space-between;
-  background: #111827;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 5px;
-}
-
-/* LISTA DE MOVIMIENTOS */
-ul {
-  list-style: none;
-  padding: 0;
-  margin-top: 20px;
-}
-
-li {
+  justify-content: space-around;
   background: #1e293b;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  padding: 10px;
 }
 
-/* COLORES */
-.ingreso-item {
-  border-left: 5px solid #22c55e;
+.bottom-nav button {
+  background: none;
+  color: white;
+  font-size: 20px;
 }
 
-.gasto-item {
-  border-left: 5px solid #ef4444;
-}
-.delete-btn {
-  background: transparent;
-  border: none;
-  color: #ef4444;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 5px;
-  margin-left: 10px;
-  transition: transform 0.1s ease, opacity 0.2s;
+/* pantallas */
+.screen {
+  display: none;
 }
 
-.delete-btn:hover {
-  transform: scale(1.2);
-  opacity: 0.8;
+.screen.active {
+  display: block;
 }
