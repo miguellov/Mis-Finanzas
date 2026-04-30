@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mis Finanzas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <h1>💰 Mis Finanzas</h1>
+
+    <!-- RESUMEN PRINCIPAL -->
+    <div class="resumen-grid">
+      <div class="card">
+        <h3>💰 Ingresos</h3>
+        <p id="ingresos">RD$ 0</p>
+      </div>
+
+      <div class="card">
+        <h3>🧾 Gastos</h3>
+        <p id="gastos">RD$ 0</p>
+      </div>
+
+      <div class="card">
+        <h3>📊 Balance</h3>
+        <p id="balance">RD$ 0</p>
+      </div>
+    </div>
+
+    <!-- FIJOS VS VARIABLES -->
+    <div class="resumen-grid">
+      <div class="card">
+        <h3>🏠 Fijos</h3>
+        <p id="fijos">RD$ 0</p>
+      </div>
+
+      <div class="card">
+        <h3>🔁 Variables</h3>
+        <p id="variables">RD$ 0</p>
+      </div>
+    </div>
+
+    <!-- FORMULARIO -->
+    <div class="form">
+      <input type="text" id="descripcion" placeholder="Descripción">
+      <input type="number" id="monto" placeholder="Monto">
+
+      <select id="categoria">
+        <option value="General">General</option>
+        <option value="Comida">🍔 Comida</option>
+        <option value="Transporte">🚗 Transporte</option>
+        <option value="Casa">🏠 Casa</option>
+        <option value="Entretenimiento">🎮 Entretenimiento</option>
+      </select>
+
+      <!-- TIPO DE GASTO -->
+      <select id="tipoGasto">
+        <option value="variable">🔁 Variable</option>
+        <option value="fijo">🏠 Fijo</option>
+      </select>
+
+      <!-- TIPO DE INGRESO -->
+      <select id="tipoIngreso">
+        <option value="fijo">💼 Fijo</option>
+        <option value="servicio">🎧 Servicio (ML Studio)</option>
+        <option value="extra">💸 Extra</option>
+      </select>
+
+      <div class="buttons">
+        <button class="ingreso" onclick="agregar('ingreso')">➕ Ingreso</button>
+        <button class="gasto" onclick="agregar('gasto')">➖ Gasto</button>
+      </div>
+    </div>
+
+    <!-- GRÁFICA -->
+    <canvas id="grafica"></canvas>
+
+    <!-- CATEGORÍAS -->
+    <div class="categorias">
+      <h3>📊 Gastos por categoría</h3>
+      <ul id="listaCategorias"></ul>
+    </div>
+
+    <!-- INGRESOS POR TIPO -->
+    <div class="categorias">
+      <h3>💼 Ingresos por tipo</h3>
+      <ul id="listaIngresosTipo"></ul>
+    </div>
+
+    <!-- LISTA DE MOVIMIENTOS -->
+    <ul id="lista"></ul>
+
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="app.js"></script>
+
+</body>
+</html>

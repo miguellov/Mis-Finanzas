@@ -1,0 +1,156 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: white;
+  margin: 0;
+}
+
+/* CONTENEDOR */
+.container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* RESUMEN */
+.resumen-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: #111827;
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.card p {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* FORM */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input, select {
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #1e293b;
+  color: white;
+  outline: none;
+}
+
+/* BOTONES */
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.1s ease, opacity 0.2s;
+}
+
+button:hover {
+  transform: scale(1.03);
+  opacity: 0.9;
+}
+
+.ingreso {
+  background: #22c55e;
+}
+
+.gasto {
+  background: #ef4444;
+}
+
+/* GRÁFICA */
+canvas {
+  margin-top: 20px;
+}
+
+/* CATEGORÍAS */
+.categorias {
+  margin-top: 20px;
+}
+
+.categorias h3 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#listaCategorias li {
+  display: flex;
+  justify-content: space-between;
+  background: #111827;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+
+/* LISTA DE MOVIMIENTOS */
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+li {
+  background: #1e293b;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* COLORES */
+.ingreso-item {
+  border-left: 5px solid #22c55e;
+}
+
+.gasto-item {
+  border-left: 5px solid #ef4444;
+}
+.delete-btn {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 5px;
+  margin-left: 10px;
+  transition: transform 0.1s ease, opacity 0.2s;
+}
+
+.delete-btn:hover {
+  transform: scale(1.2);
+  opacity: 0.8;
+}
