@@ -26,7 +26,7 @@ body {
 
 .resumen-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   padding: 10px;
 }
@@ -51,7 +51,6 @@ input, select {
   border: none;
   background: #1e293b;
   color: white;
-  width: 100%;
 }
 
 .buttons {
@@ -62,15 +61,14 @@ input, select {
 button {
   flex: 1;
   padding: 12px;
-  border: none;
   border-radius: 10px;
+  border: none;
   font-weight: bold;
 }
 
 .ingreso { background: #22c55e; }
 .gasto { background: #ef4444; }
 
-/* NAV tipo app */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -88,11 +86,34 @@ button {
   font-size: 20px;
 }
 
-/* pantallas */
 .screen {
   display: none;
 }
 
 .screen.active {
   display: block;
+}
+
+li {
+  background: #1e293b;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.item-right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-delete {
+  background: #ef4444;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 8px;
+  color: white;
+  cursor: pointer;
 }

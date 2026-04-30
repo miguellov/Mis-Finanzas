@@ -5,31 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mis Finanzas</title>
 
-  <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
 
-  <!-- Icons (usa tu logo.png si ya lo tienes) -->
   <link rel="icon" href="logo.png">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <div class="app">
 
-    <!-- HEADER -->
     <header class="header">
       <h1>💰 Mis Finanzas</h1>
-      <p id="fechaActual"></p>
     </header>
 
-    <!-- MAIN (pantallas) -->
     <main>
 
       <!-- HOME -->
       <section id="home" class="screen active">
+
         <div class="balance-card">
           <h2 id="balance">RD$ 0</h2>
           <p>Balance total</p>
@@ -50,7 +44,6 @@
           </div>
         </div>
 
-        <!-- FORM -->
         <div class="form">
           <input id="descripcion" placeholder="Descripción">
           <input id="monto" type="number" placeholder="Monto">
@@ -62,12 +55,13 @@
             <option value="Casa">🏠 Casa</option>
             <option value="Entretenimiento">🎮 Entretenimiento</option>
           </select>
+
           <select id="fuenteIngreso">
-  <option value="">Tipo de Ingreso</option>
-  <option value="ML Studio">🎧 ML Studio</option>
-  <option value="Longport">✈️ Longport</option>
-  <option value="Extra">💼 Extra</option>
-</select>
+            <option value="">Tipo de Ingreso</option>
+            <option value="ML Studio">🎧 ML Studio</option>
+            <option value="Longport">✈️ Longport</option>
+            <option value="Extra">💼 Extra</option>
+          </select>
 
           <select id="tipoGasto">
             <option value="variable">Variable</option>
@@ -79,13 +73,17 @@
             <button class="gasto" onclick="agregar('gasto')">- Gasto</button>
           </div>
         </div>
+
       </section>
 
       <!-- REPORTES -->
-      <section id="reportes" class="screen">
-        <h2>📊 Reportes</h2>
-        <canvas id="grafica"></canvas>
-      </section>
+      <<section id="reportes" class="screen">
+  <h2>📊 Gastos por categoría</h2>
+  <canvas id="grafica"></canvas>
+
+  <h2>💰 Ingresos por fuente</h2>
+  <canvas id="graficaIngresos"></canvas>
+</section>
 
       <!-- HISTORIAL -->
       <section id="historial" class="screen">
@@ -95,7 +93,7 @@
 
     </main>
 
-    <!-- NAV BAR (tipo app) -->
+    <!-- NAV -->
     <nav class="bottom-nav">
       <button onclick="cambiarVista('home')">🏠</button>
       <button onclick="cambiarVista('reportes')">📊</button>
@@ -104,7 +102,6 @@
 
   </div>
 
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="module" src="app.js"></script>
 </body>
