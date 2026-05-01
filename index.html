@@ -318,17 +318,13 @@
     </main>
 
     <nav class="bottom-nav" aria-label="Navegación principal">
-      <button type="button" class="bottom-nav__btn is-active" data-vista="home" onclick="irVista('home')">
-        <span class="bottom-nav__emoji">🏠</span>
-        <span class="bottom-nav__text">Inicio</span>
-      </button>
-      <button type="button" class="bottom-nav__btn" data-vista="reportes" onclick="irVista('reportes')">
-        <span class="bottom-nav__emoji">📊</span>
-        <span class="bottom-nav__text">Reportes</span>
-      </button>
       <button type="button" class="bottom-nav__btn" data-vista="historial" onclick="irVista('historial')">
         <span class="bottom-nav__emoji">📋</span>
         <span class="bottom-nav__text">Movimientos</span>
+      </button>
+      <button type="button" class="bottom-nav__btn bottom-nav__btn--home is-active" data-vista="home" onclick="irVista('home')">
+        <span class="bottom-nav__emoji">🏠</span>
+        <span class="bottom-nav__text">Inicio</span>
       </button>
       <button type="button" class="bottom-nav__btn" data-vista="objetivos" onclick="irVista('objetivos')">
         <span class="bottom-nav__emoji">🎯</span>
