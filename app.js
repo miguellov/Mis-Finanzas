@@ -82,6 +82,42 @@ function cuentaDesdeMetodoPago(metodo) {
   return "";
 }
 
+let uiAudioCtx = null;
+
+function obtenerAudioUI() {
+  if (!uiAudioCtx) {
+    try {
+      uiAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (_) {
+      return null;
+    }
+  }
+  return uiAudioCtx;
+}
+
+/** Pitido breve al guardar ingreso (agudo) o gasto (grave). Sin archivos externos. */
+function sonidoBotonMovimiento(tipo) {
+  const ctx = obtenerAudioUI();
+  if (!ctx) return;
+  if (ctx.state === "suspended") ctx.resume().catch(() => {});
+
+  const t0 = ctx.currentTime;
+  const dur = tipo === "ingreso" ? 0.1 : 0.12;
+  const freq = tipo === "ingreso" ? 784 : 311;
+
+  const g = ctx.createGain();
+  g.connect(ctx.destination);
+  g.gain.setValueAtTime(0.12, t0);
+  g.gain.exponentialRampToValueAtTime(0.001, t0 + dur + 0.02);
+
+  const o = ctx.createOscillator();
+  o.type = tipo === "ingreso" ? "sine" : "triangle";
+  o.frequency.setValueAtTime(freq, t0);
+  o.connect(g);
+  o.start(t0);
+  o.stop(t0 + dur);
+}
+
 // ============================================================
 // Agregar
 // ============================================================
@@ -120,6 +156,8 @@ window.agregar = async function (tipo) {
       fecha: new Date().toISOString(),
       mes
     });
+
+    sonidoBotonMovimiento(tipo);
 
     document.getElementById("descripcion").value = "";
     document.getElementById("monto").value = "";
