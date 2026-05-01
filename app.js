@@ -27,8 +27,8 @@ const CHART_COLORS = [
 function formatMoney(n) {
   const x = Number(n) || 0;
   return (
-    "S/. " +
-    x.toLocaleString("es-PE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    "RD$ " +
+    x.toLocaleString("es-DO", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
   );
 }
 
