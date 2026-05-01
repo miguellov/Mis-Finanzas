@@ -38,10 +38,18 @@ function labelMes(ym) {
   return d.toLocaleDateString("es", { month: "long", year: "numeric" });
 }
 
+/** YYYY-MM del calendario local (evita desfase vs UTC a última hora del día). */
+function getMesCalendarioLocal() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  return `${y}-${m}`;
+}
+
 function getMesSeleccionado() {
   const el = document.getElementById("mesFiltro");
   if (el && el.value) return el.value;
-  return new Date().toISOString().slice(0, 7);
+  return getMesCalendarioLocal();
 }
 
 function docMes(t) {
@@ -52,6 +60,37 @@ function docMes(t) {
 
 function filtrarPorMes(datos, mes) {
   return datos.filter((t) => docMes(t) === mes);
+}
+
+const HISTORIAL_PERIODO_KEY = "finanzas_historialPeriodo";
+
+/** Lunes 00:00 (hora local) de la semana actual. */
+function inicioSemanaLunesLocal() {
+  const d = new Date();
+  const day = d.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  const mon = new Date(d.getFullYear(), d.getMonth(), d.getDate() + diff, 0, 0, 0, 0);
+  return mon.getTime();
+}
+
+function getHistorialPeriodo() {
+  const active = document.querySelector(".mov-period-btn.is-active");
+  const p = active?.getAttribute("data-periodo");
+  if (p === "24h" || p === "semana" || p === "mes") return p;
+  return "mes";
+}
+
+function filtrarMovimientosHistorial(datos) {
+  const p = getHistorialPeriodo();
+  if (p === "mes") return filtrarPorMes(datos, getMesSeleccionado());
+  return datos.filter((t) => {
+    if (!t.fecha) return false;
+    const ts = new Date(t.fecha).getTime();
+    if (Number.isNaN(ts)) return false;
+    if (p === "24h") return ts >= Date.now() - 24 * 60 * 60 * 1000;
+    if (p === "semana") return ts >= inicioSemanaLunesLocal();
+    return false;
+  });
 }
 
 function storageKeySaldo(mes) {
@@ -213,7 +252,7 @@ function renderReporteSummaries({ ingresos, gastos }) {
 // ============================================================
 // Lista
 // ============================================================
-function renderLista(datosMes) {
+function renderLista(datosMes, periodo = "mes") {
   const lista = document.getElementById("lista");
   const emptyEl = document.getElementById("emptyHistorial");
   if (!lista) return;
@@ -225,6 +264,15 @@ function renderLista(datosMes) {
     const fb = b.fecha || "";
     return fb.localeCompare(fa);
   });
+
+  if (emptyEl) {
+    const emptyMsgs = {
+      mes: "No hay movimientos en este mes.",
+      "24h": "No hay movimientos en las últimas 24 horas.",
+      semana: "No hay movimientos esta semana (desde el lunes)."
+    };
+    emptyEl.textContent = emptyMsgs[periodo] || emptyMsgs.mes;
+  }
 
   sorted.forEach((t) => {
     const li = document.createElement("li");
@@ -961,14 +1009,22 @@ let datosGlobal = [];
 function aplicarUI() {
   const mes = getMesSeleccionado();
   const datosMes = filtrarPorMes(datosGlobal, mes);
+  const datosHistorialLista = filtrarMovimientosHistorial(datosGlobal);
   const saldoRemanente = getSaldoRemanente(mes);
   const totales = calcularTotales(datosMes);
 
   const mesLabel = labelMes(mes);
   const rl = document.getElementById("reportesMesLabel");
   const hl = document.getElementById("historialMesLabel");
+  const hHelp = document.getElementById("historialMesHelp");
+  const periodo = getHistorialPeriodo();
   if (rl) rl.textContent = mesLabel.charAt(0).toUpperCase() + mesLabel.slice(1);
-  if (hl) hl.textContent = mesLabel.charAt(0).toUpperCase() + mesLabel.slice(1);
+  if (hl) {
+    if (periodo === "24h") hl.textContent = "Últimas 24 horas";
+    else if (periodo === "semana") hl.textContent = "Esta semana (desde el lunes)";
+    else hl.textContent = mesLabel.charAt(0).toUpperCase() + mesLabel.slice(1);
+  }
+  if (hHelp) hHelp.classList.toggle("hidden", periodo !== "mes");
 
   const fijosEsperadoTabla = gastosFijosGlobal
     .filter((o) => o.mes === mes)
@@ -976,7 +1032,7 @@ function aplicarUI() {
 
   renderTotales(totales, saldoRemanente, fijosEsperadoTabla);
   renderReporteSummaries(totales);
-  renderLista(datosMes);
+  renderLista(datosHistorialLista, periodo);
   renderObjetivos();
   renderGastosFijos();
 
@@ -1080,8 +1136,31 @@ function inicializarCamposRecurrenciaFijos() {
 
 const mesFiltro = document.getElementById("mesFiltro");
 if (mesFiltro && !mesFiltro.value) {
-  mesFiltro.value = new Date().toISOString().slice(0, 7);
+  mesFiltro.value = getMesCalendarioLocal();
 }
+
+try {
+  const saved = localStorage.getItem(HISTORIAL_PERIODO_KEY);
+  if (saved === "24h" || saved === "semana" || saved === "mes") {
+    document.querySelectorAll(".mov-period-btn").forEach((b) => {
+      b.classList.toggle("is-active", b.getAttribute("data-periodo") === saved);
+    });
+  }
+} catch (_) {}
+
+document.querySelectorAll(".mov-period-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".mov-period-btn").forEach((b) => b.classList.remove("is-active"));
+    btn.classList.add("is-active");
+    const v = btn.getAttribute("data-periodo");
+    if (v) {
+      try {
+        localStorage.setItem(HISTORIAL_PERIODO_KEY, v);
+      } catch (_) {}
+    }
+    aplicarUI();
+  });
+});
 
 cargarSaldoEnInput();
 inicializarCamposRecurrenciaFijos();

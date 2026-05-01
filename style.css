@@ -235,6 +235,49 @@ body {
   color: var(--muted);
 }
 
+/* ——— Filtro periodo movimientos ——— */
+.mov-period-filtro {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.mov-period-btn {
+  flex: 1;
+  padding: 10px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.mov-period-btn:hover:not(.is-active) {
+  color: var(--text);
+  border-color: rgba(167, 139, 250, 0.35);
+}
+
+.mov-period-btn.is-active {
+  background: rgba(167, 139, 250, 0.18);
+  border-color: rgba(167, 139, 250, 0.45);
+  color: var(--text);
+}
+
+.mov-period-help {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.mov-period-help.hidden {
+  display: none;
+}
+
 /* ——— Month toolbar ——— */
 .toolbar-month {
   margin-bottom: 12px;

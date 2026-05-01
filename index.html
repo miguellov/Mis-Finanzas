@@ -210,7 +210,13 @@
 
       <!-- HISTORIAL -->
       <section id="historial" class="screen">
-        <h2 class="screen-title">Movimientos del mes</h2>
+        <h2 class="screen-title">Movimientos</h2>
+        <div class="mov-period-filtro" role="group" aria-label="Filtrar por periodo">
+          <button type="button" class="mov-period-btn" data-periodo="24h">24 h</button>
+          <button type="button" class="mov-period-btn" data-periodo="semana">Semana</button>
+          <button type="button" class="mov-period-btn is-active" data-periodo="mes">Mes</button>
+        </div>
+        <p id="historialMesHelp" class="mov-period-help">El mes lo elegís arriba en «Mes en curso».</p>
         <p id="historialMesLabel" class="reportes-sub"></p>
         <ul id="lista" class="lista-mov"></ul>
         <p id="emptyHistorial" class="empty-hint hidden">No hay movimientos en este mes.</p>
