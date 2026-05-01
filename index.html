@@ -6,110 +6,334 @@
   <title>Mis Finanzas</title>
 
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#1e1b4b">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
 
   <link rel="icon" href="logo.png">
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+  <div class="menu-backdrop" id="menuBackdrop" aria-hidden="true"></div>
+
+  <aside class="nav-drawer" id="navDrawer" aria-label="Menú principal">
+    <div class="nav-drawer__head">
+      <span class="nav-drawer__logo">💰</span>
+      <div>
+        <strong>Mis Finanzas</strong>
+        <p class="nav-drawer__sub">Control mensual</p>
+      </div>
+    </div>
+    <nav class="nav-drawer__links">
+      <button type="button" class="nav-drawer__link is-active" data-vista="home" onclick="irVista('home')">
+        <span class="nav-drawer__icon">🏠</span> Inicio
+      </button>
+      <button type="button" class="nav-drawer__link" data-vista="reportes" onclick="irVista('reportes')">
+        <span class="nav-drawer__icon">📊</span> Reportes
+      </button>
+      <button type="button" class="nav-drawer__link" data-vista="historial" onclick="irVista('historial')">
+        <span class="nav-drawer__icon">📋</span> Movimientos
+      </button>
+      <button type="button" class="nav-drawer__link" data-vista="objetivos" onclick="irVista('objetivos')">
+        <span class="nav-drawer__icon">🎯</span> Objetivos del mes
+      </button>
+      <button type="button" class="nav-drawer__link" data-vista="gastosFijos" onclick="irVista('gastosFijos')">
+        <span class="nav-drawer__icon">📌</span> Gastos fijos
+      </button>
+      <button type="button" class="nav-drawer__link" data-vista="calcPersonas" onclick="irVista('calcPersonas')">
+        <span class="nav-drawer__icon">🧮</span> Calculadora gastos / persona
+      </button>
+    </nav>
+    <p class="nav-drawer__hint">El mes se elige arriba; el saldo inicial en Inicio.</p>
+  </aside>
+
   <div class="app">
 
     <header class="header">
-      <h1>💰 Mis Finanzas</h1>
+      <button type="button" class="header__menu-btn" id="btnMenu" aria-label="Abrir menú">☰</button>
+      <div class="header__titles">
+        <h1>Mis Finanzas</h1>
+        <p class="header__tagline">Ingresos, gastos y balance</p>
+      </div>
     </header>
+
+    <div class="toolbar-month toolbar-month--global">
+      <label class="field-label" for="mesFiltro">Mes en curso</label>
+      <input type="month" id="mesFiltro" class="input-month">
+    </div>
 
     <main>
 
       <!-- HOME -->
       <section id="home" class="screen active">
 
+        <div class="saldo-anterior card-saldo">
+          <div class="saldo-anterior__label">Saldo remanente (mes anterior)</div>
+          <div class="saldo-anterior__row">
+            <span class="saldo-anterior__currency">S/.</span>
+            <input type="number" id="saldoRemanente" class="saldo-anterior__input" step="0.01" min="0" placeholder="0.00" inputmode="decimal">
+            <button type="button" class="btn btn--ghost btn--sm" id="btnGuardarSaldo">Guardar</button>
+          </div>
+          <p class="saldo-anterior__help">Es el cierre que arrastrás al mes actual, como en tu Excel.</p>
+        </div>
+
         <div class="balance-card">
-          <h2 id="balance">RD$ 0</h2>
-          <p>Balance total</p>
+          <p class="balance-card__eyebrow">Balance del mes</p>
+          <h2 id="balance">S/. 0.00</h2>
+          <p class="balance-card__formula">Saldo anterior + Ingresos − Gastos</p>
         </div>
 
         <div class="resumen-grid">
-          <div class="card">
+          <div class="card card--income">
             <h3>Ingresos</h3>
-            <p id="ingresos">RD$ 0</p>
+            <p id="ingresos">S/. 0.00</p>
           </div>
-          <div class="card">
+          <div class="card card--expense">
             <h3>Gastos</h3>
-            <p id="gastos">RD$ 0</p>
+            <p id="gastos">S/. 0.00</p>
           </div>
-          <div class="card">
+          <div class="card card--fixed">
             <h3>Fijos</h3>
-            <p id="fijos">RD$ 0</p>
+            <p id="fijos">S/. 0.00</p>
           </div>
         </div>
 
-        <div class="form">
-          <input id="descripcion" placeholder="Descripción">
-          <input id="monto" type="number" placeholder="Monto">
+        <div class="form panel">
+          <h3 class="panel__title">Registrar movimiento</h3>
 
-          <select id="categoria">
-            <option value="General">General</option>
-            <option value="Comida">🍔 Comida</option>
-            <option value="Transporte">🚗 Transporte</option>
-            <option value="Casa">🏠 Casa</option>
-            <option value="Entretenimiento">🎮 Entretenimiento</option>
-          </select>
+          <div class="form-base">
+            <input id="descripcion" placeholder="Descripción" autocomplete="off">
+            <input id="monto" type="number" step="0.01" min="0" placeholder="Monto" inputmode="decimal">
+          </div>
 
-          <select id="metodoPago">
-            <option value="">💳 Método de pago</option>
-            <option value="Debito">Tarjeta de débito</option>
-            <option value="Credito">Tarjeta de crédito</option>
-            <option value="Efectivo">Efectivo</option>
-            <option value="Transferencia">Transferencia</option>
-          </select>
+          <div class="form-group form-group--ingreso" aria-label="Opciones de ingreso">
+            <span class="form-group__tag form-group__tag--in">Ingreso</span>
+            <p class="form-group__hint">Al sumar un ingreso: origen y dónde queda el dinero.</p>
+            <select id="fuenteIngreso" class="input--income">
+              <option value="">Tipo de ingreso</option>
+              <option value="ML Studio">🎧 ML Studio</option>
+              <option value="Longport">✈️ Longport</option>
+              <option value="Extra">💼 Extra</option>
+            </select>
+            <select id="cuentaIngreso" class="input--income">
+              <option value="">💰 ¿Dónde queda el dinero?</option>
+              <option value="efectivo">💵 Efectivo</option>
+              <option value="banco">🏦 Cuenta bancaria</option>
+            </select>
+          </div>
 
-          <select id="cuenta">
-            <option value="">💰 Ubicación del dinero</option>
-            <option value="efectivo">💵 Efectivo</option>
-            <option value="banco">🏦 Cuenta bancaria</option>
-          </select>
-
-          <select id="fuenteIngreso">
-            <option value="">Tipo de Ingreso</option>
-            <option value="ML Studio">🎧 ML Studio</option>
-            <option value="Longport">✈️ Longport</option>
-            <option value="Extra">💼 Extra</option>
-          </select>
-
-          <select id="tipoGasto">
-            <option value="variable">Variable</option>
-            <option value="fijo">Fijo</option>
-          </select>
+          <div class="form-group form-group--gasto" aria-label="Opciones de gasto">
+            <span class="form-group__tag form-group__tag--out">Gasto</span>
+            <p class="form-group__hint">Categoría, tipo y método de pago. Con eso se deduce si salió de efectivo o de cuenta (débito, crédito y transferencia cuentan como banco).</p>
+            <select id="categoria" class="input--expense">
+              <option value="General">General</option>
+              <option value="Transporte">🚗 Transporte</option>
+              <option value="Alimentación">🛒 Alimentación</option>
+              <option value="Supermercado">🛍️ Supermercado</option>
+              <option value="Restaurantes">🍽️ Restaurantes</option>
+              <option value="Gasolina">⛽ Gasolina</option>
+              <option value="Salud">💊 Salud</option>
+              <option value="Ropa">👕 Ropa</option>
+              <option value="Belleza">💇 Belleza</option>
+              <option value="Entretenimiento">🎮 Entretenimiento</option>
+              <option value="Hogar">🏠 Hogar</option>
+              <option value="Servicios">📋 Servicios</option>
+              <option value="Educación">📚 Educación</option>
+              <option value="Mascotas">🐾 Mascotas</option>
+              <option value="Regalos">🎁 Regalos</option>
+              <option value="Otros">📌 Otros</option>
+            </select>
+            <select id="tipoGasto" class="input--expense">
+              <option value="variable">Variable</option>
+              <option value="fijo">Fijo</option>
+            </select>
+            <select id="metodoPago" class="input--expense">
+              <option value="">💳 Método de pago</option>
+              <option value="Efectivo">💵 Efectivo</option>
+              <option value="Debito">Tarjeta de débito</option>
+              <option value="Credito">Tarjeta de crédito</option>
+              <option value="Transferencia">Transferencia</option>
+            </select>
+          </div>
 
           <div class="buttons">
-            <button class="ingreso" onclick="agregar('ingreso')">+ Ingreso</button>
-            <button class="gasto" onclick="agregar('gasto')">- Gasto</button>
+            <button type="button" class="btn ingreso" onclick="agregar('ingreso')">+ Ingreso</button>
+            <button type="button" class="btn gasto" onclick="agregar('gasto')">− Gasto</button>
           </div>
         </div>
       </section>
 
       <!-- REPORTES -->
       <section id="reportes" class="screen">
-        <h2>📊 Gastos por categoría</h2>
-        <canvas id="grafica"></canvas>
+        <div class="reportes-head">
+          <h2 class="screen-title">Reportes del mes</h2>
+          <p id="reportesMesLabel" class="reportes-sub"></p>
+        </div>
 
-        <h2>💰 Ingresos por fuente</h2>
-        <canvas id="graficaIngresos"></canvas>
+        <div class="report-summary">
+          <div class="report-summary__item report-summary__item--in">
+            <span>Total ingresos</span>
+            <strong id="reporteTotalIngresos">S/. 0.00</strong>
+          </div>
+          <div class="report-summary__item report-summary__item--out">
+            <span>Total gastos</span>
+            <strong id="reporteTotalGastos">S/. 0.00</strong>
+          </div>
+        </div>
+
+        <article class="chart-card">
+          <div class="chart-card__head">
+            <h3>Gastos por categoría</h3>
+            <p class="chart-card__hint">Solo gastos variables y fijos del mes</p>
+          </div>
+          <div class="chart-wrap" id="wrapGraficaGastos">
+            <canvas id="grafica" aria-label="Gráfico de gastos por categoría"></canvas>
+          </div>
+          <p id="emptyGastos" class="empty-hint hidden">No hay gastos registrados en este mes.</p>
+        </article>
+
+        <article class="chart-card">
+          <div class="chart-card__head">
+            <h3>Ingresos por fuente</h3>
+            <p class="chart-card__hint">Agrupado por tipo de ingreso</p>
+          </div>
+          <div class="chart-wrap" id="wrapGraficaIngresos">
+            <canvas id="graficaIngresos" aria-label="Gráfico de ingresos por fuente"></canvas>
+          </div>
+          <p id="emptyIngresos" class="empty-hint hidden">No hay ingresos registrados en este mes.</p>
+        </article>
       </section>
 
       <!-- HISTORIAL -->
       <section id="historial" class="screen">
-        <h2>📋 Movimientos</h2>
-        <ul id="lista"></ul>
+        <h2 class="screen-title">Movimientos del mes</h2>
+        <p id="historialMesLabel" class="reportes-sub"></p>
+        <ul id="lista" class="lista-mov"></ul>
+        <p id="emptyHistorial" class="empty-hint hidden">No hay movimientos en este mes.</p>
+      </section>
+
+      <!-- OBJETIVOS FINANCIEROS -->
+      <section id="objetivos" class="screen">
+        <div class="objetivos-banner">
+          <h2 class="objetivos-banner__title">Objetivos financieros del mes</h2>
+          <p id="objetivosMesLabel" class="objetivos-banner__mes"></p>
+        </div>
+
+        <div class="objetivos-progress card">
+          <span class="objetivos-progress__label">Progreso</span>
+          <strong id="objetivosProgreso" class="objetivos-progress__value">0 / 0</strong>
+        </div>
+
+        <div class="objetivos-add panel">
+          <label class="field-label" for="nuevoObjetivo">Nuevo objetivo</label>
+          <div class="objetivos-add__row">
+            <input type="text" id="nuevoObjetivo" placeholder="Ej. MacBook Pro, viaje…" maxlength="120" autocomplete="off">
+            <button type="button" class="btn btn--objetivo" id="btnAddObjetivo">Añadir</button>
+          </div>
+        </div>
+
+        <div class="objetivos-table-wrap">
+          <div class="objetivos-table-head">
+            <span>Concepto</span>
+            <span class="objetivos-table-head__check" title="Cumplido">✓</span>
+            <span class="objetivos-table-head__del" aria-hidden="true"></span>
+          </div>
+          <ul id="listaObjetivos" class="objetivos-list" aria-live="polite"></ul>
+          <p id="emptyObjetivos" class="empty-hint hidden">No hay objetivos para este mes. Añadí el primero arriba.</p>
+        </div>
+      </section>
+
+      <!-- GASTOS FIJOS (solo acceso desde menú ☰) -->
+      <section id="gastosFijos" class="screen">
+        <div class="fijos-banner">
+          <h2 class="fijos-banner__title">Gastos fijos</h2>
+          <p id="fijosMesLabel" class="fijos-banner__mes"></p>
+        </div>
+
+        <div class="fijos-add panel">
+          <label class="field-label" for="fijoNuevoConcepto">Agregar concepto</label>
+          <div class="fijos-add__row">
+            <input type="text" id="fijoNuevoConcepto" placeholder="Ej. Netflix, alquiler…" maxlength="100" autocomplete="off">
+            <input type="number" id="fijoNuevoEsperado" step="0.01" min="0" placeholder="Gasto esperado" inputmode="decimal">
+            <button type="button" class="btn btn--fijo-add" id="btnAddGastoFijo">Añadir</button>
+          </div>
+        </div>
+
+        <div class="fijos-scroll-wrap">
+          <table class="fijos-table" aria-label="Gastos fijos del mes">
+            <thead>
+              <tr>
+                <th>Concepto</th>
+                <th>Gasto esperado</th>
+                <th>Gasto real</th>
+                <th>Método de pago</th>
+                <th>Fecha de cobro</th>
+                <th>Pagado</th>
+                <th class="fijos-table__del"></th>
+              </tr>
+            </thead>
+            <tbody id="gastosFijosBody"></tbody>
+            <tfoot>
+              <tr class="fijos-totals">
+                <td><strong>TOTAL</strong></td>
+                <td id="fijosTotalEsperado"><strong>S/. 0.00</strong></td>
+                <td id="fijosTotalReal"><strong>S/. 0.00</strong></td>
+                <td colspan="4"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <p id="emptyGastosFijos" class="empty-hint hidden">No hay gastos fijos este mes. Añadí el primero arriba.</p>
+      </section>
+
+      <!-- Calculadora gastos por persona (menú ☰) -->
+      <section id="calcPersonas" class="screen">
+        <div class="calc-widget">
+          <div class="calc-widget__banner">Calculadora gastos por persona</div>
+          <p class="calc-widget__intro">
+            Calcula rápidamente la cuantía que paga cada persona. Introduce el gasto total y el número de personas.
+          </p>
+          <div class="calc-widget__grid">
+            <div class="calc-widget__cell calc-widget__cell--head">Cuantía</div>
+            <div class="calc-widget__cell calc-widget__cell--head">Nº personas</div>
+            <div class="calc-widget__cell">
+              <label class="sr-only" for="calcGastoTotal">Gasto total</label>
+              <input type="number" id="calcGastoTotal" class="calc-widget__input" step="0.01" min="0" placeholder="7000" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="calc-widget__cell">
+              <label class="sr-only" for="calcNumPersonas">Número de personas</label>
+              <input type="number" id="calcNumPersonas" class="calc-widget__input" step="1" min="1" placeholder="4" inputmode="numeric" autocomplete="off">
+            </div>
+          </div>
+          <div class="calc-widget__result">
+            <span>Cuantía por persona</span>
+            <strong id="calcPorPersona">S/. 0.00</strong>
+          </div>
+        </div>
       </section>
 
     </main>
 
-    <nav class="bottom-nav">
-      <button onclick="cambiarVista('home')">🏠</button>
-      <button onclick="cambiarVista('reportes')">📊</button>
-      <button onclick="cambiarVista('historial')">📋</button>
+    <nav class="bottom-nav" aria-label="Navegación principal">
+      <button type="button" class="bottom-nav__btn is-active" data-vista="home" onclick="irVista('home')">
+        <span class="bottom-nav__emoji">🏠</span>
+        <span class="bottom-nav__text">Inicio</span>
+      </button>
+      <button type="button" class="bottom-nav__btn" data-vista="reportes" onclick="irVista('reportes')">
+        <span class="bottom-nav__emoji">📊</span>
+        <span class="bottom-nav__text">Reportes</span>
+      </button>
+      <button type="button" class="bottom-nav__btn" data-vista="historial" onclick="irVista('historial')">
+        <span class="bottom-nav__emoji">📋</span>
+        <span class="bottom-nav__text">Movimientos</span>
+      </button>
+      <button type="button" class="bottom-nav__btn" data-vista="objetivos" onclick="irVista('objetivos')">
+        <span class="bottom-nav__emoji">🎯</span>
+        <span class="bottom-nav__text">Objetivos</span>
+      </button>
     </nav>
 
   </div>
