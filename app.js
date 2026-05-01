@@ -1151,3 +1151,9 @@ document.getElementById("fijoNuevoConcepto")?.addEventListener("keydown", (e) =>
     agregarGastoFijo();
   }
 });
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("./service-worker.js", { scope: "./" })
+    .catch(() => {});
+}
