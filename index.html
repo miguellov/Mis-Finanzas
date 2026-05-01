@@ -96,8 +96,9 @@
             <p id="gastos">S/. 0.00</p>
           </div>
           <div class="card card--fixed">
-            <h3>Fijos</h3>
+            <h3>Fijos <span class="card__badge">esperado</span></h3>
             <p id="fijos">S/. 0.00</p>
+            <p class="card__micro">Suma de la tabla Gastos fijos del mes</p>
           </div>
         </div>
 
@@ -262,6 +263,51 @@
           </div>
         </div>
 
+        <div class="fijos-rec panel">
+          <h3 class="panel__title">Programar varios meses</h3>
+          <p class="fijos-rec__hint">
+            Mismo concepto y monto en cada cuota. Elegí uno o dos días del mes (ej. 15 y 30) y el rango de meses (ej. desde este mes hasta diciembre).
+            Si un día no existe en un mes (ej. 30 en febrero), esa cuota se omite.
+          </p>
+          <div class="fijos-rec__grid">
+            <div class="fijos-rec__field">
+              <label class="field-label" for="fijoRecConcepto">Concepto</label>
+              <input type="text" id="fijoRecConcepto" maxlength="100" placeholder="Pago de casa" autocomplete="off">
+            </div>
+            <div class="fijos-rec__field">
+              <label class="field-label" for="fijoRecEsperado">Esperado por cuota</label>
+              <input type="number" id="fijoRecEsperado" step="0.01" min="0" placeholder="Monto" inputmode="decimal">
+            </div>
+            <div class="fijos-rec__field">
+              <label class="field-label" for="fijoRecDia1">Día de cobro 1</label>
+              <input type="number" id="fijoRecDia1" min="1" max="31" value="15" inputmode="numeric">
+            </div>
+            <div class="fijos-rec__field">
+              <label class="field-label" for="fijoRecDia2">Día 2 (opcional)</label>
+              <input type="number" id="fijoRecDia2" min="1" max="31" placeholder="Ej. 30" inputmode="numeric">
+            </div>
+            <div class="fijos-rec__field">
+              <label class="field-label" for="fijoRecMesDesde">Desde mes</label>
+              <input type="month" id="fijoRecMesDesde" class="fijos-rec__month">
+            </div>
+            <div class="fijos-rec__field">
+              <label class="field-label" for="fijoRecMesHasta">Hasta mes</label>
+              <input type="month" id="fijoRecMesHasta" class="fijos-rec__month">
+            </div>
+          </div>
+          <div class="fijos-rec__metodo">
+            <label class="field-label" for="fijoRecMetodo">Método de pago (opcional)</label>
+            <select id="fijoRecMetodo">
+              <option value="">—</option>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Transferencia">Transferencia</option>
+              <option value="Debito">Tarjeta débito</option>
+              <option value="Credito">Tarjeta crédito</option>
+            </select>
+          </div>
+          <button type="button" class="btn btn--fijo-add" id="btnGenerarFijosRecurrentes">Generar en los meses elegidos</button>
+        </div>
+
         <div class="fijos-scroll-wrap">
           <table class="fijos-table" aria-label="Gastos fijos del mes">
             <thead>
@@ -326,9 +372,9 @@
         <span class="bottom-nav__emoji">🏠</span>
         <span class="bottom-nav__text">Inicio</span>
       </button>
-      <button type="button" class="bottom-nav__btn" data-vista="objetivos" onclick="irVista('objetivos')">
-        <span class="bottom-nav__emoji">🎯</span>
-        <span class="bottom-nav__text">Objetivos</span>
+      <button type="button" class="bottom-nav__btn" data-vista="gastosFijos" onclick="irVista('gastosFijos')">
+        <span class="bottom-nav__emoji">📌</span>
+        <span class="bottom-nav__text">Gastos fijos</span>
       </button>
     </nav>
 

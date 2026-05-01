@@ -193,11 +193,13 @@ function calcularTotales(datosMes) {
   return { ingresos, gastos, fijos, categorias, ingresosFuente };
 }
 
-function renderTotales({ ingresos, gastos, fijos }, saldoRemanente) {
+function renderTotales({ ingresos, gastos }, saldoRemanente, fijosEsperadoTabla) {
   const balance = saldoRemanente + ingresos - gastos;
   document.getElementById("ingresos").innerText = formatMoney(ingresos);
   document.getElementById("gastos").innerText = formatMoney(gastos);
-  document.getElementById("fijos").innerText = formatMoney(fijos);
+  const fijosVal =
+    typeof fijosEsperadoTabla === "number" ? fijosEsperadoTabla : 0;
+  document.getElementById("fijos").innerText = formatMoney(fijosVal);
   document.getElementById("balance").innerText = formatMoney(balance);
 }
 
@@ -466,6 +468,46 @@ async function agregarObjetivo() {
 // ============================================================
 let gastosFijosGlobal = [];
 
+function mesesRangoInclusivo(ymA, ymB) {
+  let a = ymA;
+  let b = ymB;
+  if (a > b) {
+    const t = a;
+    a = b;
+    b = t;
+  }
+  const [ya, ma] = a.split("-").map(Number);
+  const [yb, mb] = b.split("-").map(Number);
+  const out = [];
+  let y = ya;
+  let m = ma;
+  while (y < yb || (y === yb && m <= mb)) {
+    out.push(`${y}-${String(m).padStart(2, "0")}`);
+    m++;
+    if (m > 12) {
+      m = 1;
+      y++;
+    }
+  }
+  return out;
+}
+
+function clampDayToMonth(year, month1to12, day) {
+  if (!Number.isInteger(day) || day < 1 || day > 31) return null;
+  const last = new Date(year, month1to12, 0).getDate();
+  if (day > last) return null;
+  return day;
+}
+
+function fijoYaExiste(mes, concepto, fechaYYYYMMDD) {
+  const c = concepto.trim().toLowerCase();
+  return gastosFijosGlobal.some((o) => {
+    if (o.mes !== mes) return false;
+    if ((o.concepto || "").trim().toLowerCase() !== c) return false;
+    return toInputDate(o.fechaCobro) === fechaYYYYMMDD;
+  });
+}
+
 function fijoFilaUrgente(o) {
   if (o.pagado) return false;
   const r = o.real;
@@ -650,6 +692,97 @@ async function agregarGastoFijo() {
     console.error(e);
     alert("No se pudo añadir el gasto fijo.");
   }
+}
+
+async function generarGastosFijosRecurrentes() {
+  const concepto = document.getElementById("fijoRecConcepto")?.value?.trim() ?? "";
+  const esp = parseFloat(document.getElementById("fijoRecEsperado")?.value);
+  const d1 = parseInt(document.getElementById("fijoRecDia1")?.value, 10);
+  const d2Raw = document.getElementById("fijoRecDia2")?.value?.trim() ?? "";
+  const d2 = d2Raw === "" ? null : parseInt(d2Raw, 10);
+  const mesDesde = document.getElementById("fijoRecMesDesde")?.value;
+  const mesHasta = document.getElementById("fijoRecMesHasta")?.value;
+  const metodo = document.getElementById("fijoRecMetodo")?.value ?? "";
+
+  if (!concepto) {
+    alert("Escribe el concepto (ej. Pago de casa).");
+    return;
+  }
+  if (isNaN(esp) || esp < 0) {
+    alert("Indica un monto esperado por cuota válido.");
+    return;
+  }
+  if (!mesDesde || !mesHasta) {
+    alert("Elige el mes inicial y el mes final del rango.");
+    return;
+  }
+  if (!Number.isInteger(d1) || d1 < 1 || d1 > 31) {
+    alert("Día de cobro 1 debe ser entre 1 y 31.");
+    return;
+  }
+  if (
+    d2 != null &&
+    d2Raw !== "" &&
+    (!Number.isInteger(d2) || d2 < 1 || d2 > 31)
+  ) {
+    alert("Día 2 debe ser entre 1 y 31 o déjalo vacío.");
+    return;
+  }
+  if (d2 != null && d2 === d1) {
+    alert("Los dos días no pueden ser el mismo.");
+    return;
+  }
+
+  const dias =
+    d2 == null || d2Raw === "" || !Number.isInteger(d2)
+      ? [d1]
+      : [...new Set([d1, d2])].sort((x, y) => x - y);
+  const meses = mesesRangoInclusivo(mesDesde, mesHasta);
+  const grupoId =
+    typeof crypto !== "undefined" && crypto.randomUUID
+      ? crypto.randomUUID()
+      : "rec_" + Date.now();
+
+  let creados = 0;
+  let omitidos = 0;
+
+  for (const ym of meses) {
+    const [y, mo] = ym.split("-").map(Number);
+    for (const d of dias) {
+      const diaOk = clampDayToMonth(y, mo, d);
+      if (diaOk == null) {
+        omitidos++;
+        continue;
+      }
+      const fechaStr = `${ym}-${String(diaOk).padStart(2, "0")}`;
+      if (fijoYaExiste(ym, concepto, fechaStr)) {
+        omitidos++;
+        continue;
+      }
+      try {
+        await addDoc(collection(db, "gastos_fijos"), {
+          mes: ym,
+          concepto,
+          esperado: esp,
+          real: null,
+          metodoPago: metodo,
+          fechaCobro: fechaStr,
+          pagado: false,
+          creado: Date.now() + creados,
+          recurrenciaGrupoId: grupoId
+        });
+        creados++;
+      } catch (e) {
+        console.error(e);
+        alert("Error al guardar. Revisa la consola o las reglas de Firestore.");
+        return;
+      }
+    }
+  }
+
+  alert(
+    `Listo: ${creados} cuota(s) creada(s). ${omitidos} omitida(s) (ya existían o ese día no existe en el mes).`
+  );
 }
 
 function renderGastosFijos() {
@@ -837,7 +970,11 @@ function aplicarUI() {
   if (rl) rl.textContent = mesLabel.charAt(0).toUpperCase() + mesLabel.slice(1);
   if (hl) hl.textContent = mesLabel.charAt(0).toUpperCase() + mesLabel.slice(1);
 
-  renderTotales(totales, saldoRemanente);
+  const fijosEsperadoTabla = gastosFijosGlobal
+    .filter((o) => o.mes === mes)
+    .reduce((s, o) => s + (Number(o.esperado) || 0), 0);
+
+  renderTotales(totales, saldoRemanente, fijosEsperadoTabla);
   renderReporteSummaries(totales);
   renderLista(datosMes);
   renderObjetivos();
@@ -927,15 +1064,31 @@ window.eliminar = async function (id) {
 // ============================================================
 // Init
 // ============================================================
+function sincronizarMesDesdeRecurrencia() {
+  const md = document.getElementById("fijoRecMesDesde");
+  if (md) md.value = getMesSeleccionado();
+}
+
+function inicializarCamposRecurrenciaFijos() {
+  const mh = document.getElementById("fijoRecMesHasta");
+  sincronizarMesDesdeRecurrencia();
+  if (mh && !mh.value) {
+    const y = parseInt(getMesSeleccionado().split("-")[0], 10);
+    mh.value = `${y}-12`;
+  }
+}
+
 const mesFiltro = document.getElementById("mesFiltro");
 if (mesFiltro && !mesFiltro.value) {
   mesFiltro.value = new Date().toISOString().slice(0, 7);
 }
 
 cargarSaldoEnInput();
+inicializarCamposRecurrenciaFijos();
 
 mesFiltro?.addEventListener("change", () => {
   cargarSaldoEnInput();
+  sincronizarMesDesdeRecurrencia();
   aplicarUI();
 });
 
@@ -986,6 +1139,9 @@ onSnapshot(collection(db, "gastos_fijos"), (snapshot) => {
 });
 
 document.getElementById("btnAddGastoFijo")?.addEventListener("click", agregarGastoFijo);
+document
+  .getElementById("btnGenerarFijosRecurrentes")
+  ?.addEventListener("click", generarGastosFijosRecurrentes);
 
 document.getElementById("calcGastoTotal")?.addEventListener("input", actualizarCalcPersonas);
 document.getElementById("calcNumPersonas")?.addEventListener("input", actualizarCalcPersonas);

@@ -403,7 +403,28 @@ body {
   background: var(--fixed-bg);
   border-color: rgba(56, 189, 248, 0.25);
 }
-.card--fixed p { color: var(--fixed); }
+.card--fixed p#fijos {
+  color: var(--fixed);
+}
+.card--fixed p.card__micro {
+  margin-top: 8px;
+  font-size: 0.62rem;
+  font-weight: 500;
+  color: rgba(148, 163, 184, 0.95);
+  line-height: 1.25;
+}
+
+.card__badge {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.52rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fixed);
+  opacity: 0.9;
+  vertical-align: middle;
+}
 
 /* ——— Form panel ——— */
 .panel {
@@ -871,6 +892,57 @@ select:focus,
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
+}
+
+.fijos-rec {
+  margin-bottom: 16px;
+}
+
+.fijos-rec__hint {
+  margin: 0 0 14px;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.fijos-rec__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.fijos-rec__field input,
+.fijos-rec__month {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.fijos-rec__metodo {
+  margin-bottom: 14px;
+}
+
+.fijos-rec__metodo select {
+  width: 100%;
+  max-width: 320px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.fijos-rec .btn--fijo-add {
+  width: 100%;
+  margin-top: 4px;
 }
 
 .fijos-scroll-wrap {
