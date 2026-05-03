@@ -14,6 +14,7 @@
 
   <link rel="icon" href="logo.png">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="gemini-chat.css">
 </head>
 
 <body>
@@ -96,9 +97,9 @@
             <p id="gastos">RD$ 0.00</p>
           </div>
           <div class="card card--fixed">
-            <h3>Fijos <span class="card__badge">esperado</span></h3>
+            <h3>Fijos <span class="card__badge">tabla</span></h3>
             <p id="fijos">RD$ 0.00</p>
-            <p class="card__micro">Suma de la tabla Gastos fijos del mes</p>
+            <p class="card__micro">Por fila: gasto real si lo cargaste; si no, el esperado (misma lógica que al marcar Pagado).</p>
           </div>
         </div>
 
@@ -388,5 +389,52 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="module" src="app.js"></script>
+
+  <button type="button" id="geminiBtn" class="gemini-fab" aria-label="Abrir asistente Gemini">
+    <span aria-hidden="true">✨</span>
+    <span id="geminiBadge" class="gemini-fab__badge">!</span>
+  </button>
+
+  <div id="geminiPanel" class="gemini-panel" aria-label="Asistente Gemini">
+    <div class="gemini-panel__head">
+      <div class="gemini-panel__avatar" aria-hidden="true">✨</div>
+      <div class="gemini-panel__info">
+        <div class="gemini-panel__title">Asistente Gemini</div>
+        <div class="gemini-panel__sub">Análisis de tus finanzas</div>
+      </div>
+      <div class="gemini-panel__actions">
+        <button type="button" id="geminiBtnAnalizar" class="gemini-panel__btn">Analizar</button>
+        <button type="button" id="geminiBtnLimpiar" class="gemini-panel__btn">Limpiar</button>
+        <button type="button" id="geminiBtnKey" class="gemini-panel__btn">API Key</button>
+        <button type="button" id="geminiBtnCerrar" class="gemini-panel__btn" aria-label="Cerrar">✕</button>
+      </div>
+    </div>
+    <div id="geminiMessages" class="gemini-messages">
+      <div class="gemini-msg gemini-msg--bot">¡Hola! Preguntá sobre tus finanzas o elegí una sugerencia abajo.</div>
+    </div>
+    <div id="geminiSuggs" class="gemini-suggestions">
+      <button type="button" class="gemini-suggestions__chip">💡 ¿Cómo va mi balance este mes?</button>
+      <button type="button" class="gemini-suggestions__chip">📊 Resume mis gastos por categoría</button>
+    </div>
+    <div class="gemini-input-row">
+      <label class="sr-only" for="geminiInput">Mensaje para el asistente</label>
+      <textarea id="geminiInput" class="gemini-input" placeholder="Escribí tu pregunta…" rows="1"></textarea>
+      <button type="button" id="geminiSend" class="gemini-send" aria-label="Enviar">➤</button>
+    </div>
+  </div>
+
+  <div id="geminiApiKeyModal" class="gemini-apikey-modal" role="dialog" aria-modal="true" aria-labelledby="geminiApiKeyTitle">
+    <div class="gemini-apikey-box">
+      <h3 id="geminiApiKeyTitle">API Key de Gemini</h3>
+      <p>Pegá tu clave de Google AI Studio para usar el asistente.</p>
+      <input type="password" id="geminiApiKeyInput" autocomplete="off" placeholder="API Key" />
+      <div class="gemini-apikey-actions">
+        <button type="button" id="btnApiKeyCancel" class="btn-apikey-cancel">Cancelar</button>
+        <button type="button" id="btnApiKeySave" class="btn-apikey-save">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="gemini-ui.js"></script>
 </body>
 </html>

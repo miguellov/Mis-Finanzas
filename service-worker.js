@@ -1,9 +1,12 @@
-const CACHE = "finanzas-v1";
+const CACHE = "finanzas-v2";
 
 const PRECACHE_URLS = [
   "./index.html",
   "./style.css",
   "./app.js",
+  "./gemini.js",
+  "./gemini-ui.js",
+  "./gemini-chat.css",
   "./manifest.json",
   "./logo.png"
 ];

@@ -1,0 +1,30 @@
+// ============================================================
+// PARCHE PARA app.js — Solo 3 cambios necesarios
+// ============================================================
+//
+// Busca los 3 bloques onSnapshot al final de tu app.js y
+// añade las líneas marcadas con ➕:
+//
+// ── BLOQUE 1 ──
+// onSnapshot(collection(db, "finanzas"), (snapshot) => {
+//   datosGlobal = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+//   ➕ window._datosGlobal = datosGlobal;        // <-- añade esta línea
+//   aplicarUI();
+// });
+//
+// ── BLOQUE 2 ──
+// onSnapshot(collection(db, "objetivos"), (snapshot) => {
+//   objetivosGlobal = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+//   ➕ window._objetivosGlobal = objetivosGlobal; // <-- añade esta línea
+//   aplicarUI();
+// });
+//
+// ── BLOQUE 3 ──
+// onSnapshot(collection(db, "gastos_fijos"), (snapshot) => {
+//   gastosFijosGlobal = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+//   ➕ window._gastosFijosGlobal = gastosFijosGlobal; // <-- añade esta línea
+//   aplicarUI();
+// });
+//
+// ¡Eso es todo lo que cambia en app.js!
+// ============================================================

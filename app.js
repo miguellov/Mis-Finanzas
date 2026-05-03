@@ -232,12 +232,12 @@ function calcularTotales(datosMes) {
   return { ingresos, gastos, fijos, categorias, ingresosFuente };
 }
 
-function renderTotales({ ingresos, gastos }, saldoRemanente, fijosEsperadoTabla) {
+function renderTotales({ ingresos, gastos }, saldoRemanente, fijosMontoTabla) {
   const balance = saldoRemanente + ingresos - gastos;
   document.getElementById("ingresos").innerText = formatMoney(ingresos);
   document.getElementById("gastos").innerText = formatMoney(gastos);
   const fijosVal =
-    typeof fijosEsperadoTabla === "number" ? fijosEsperadoTabla : 0;
+    typeof fijosMontoTabla === "number" ? fijosMontoTabla : 0;
   document.getElementById("fijos").innerText = formatMoney(fijosVal);
   document.getElementById("balance").innerText = formatMoney(balance);
 }
@@ -863,6 +863,27 @@ function renderGastosFijos() {
   if (totalEspEl) totalEspEl.innerHTML = "<strong>" + formatMoney(sumE) + "</strong>";
   if (totalRealEl) totalRealEl.innerHTML = "<strong>" + formatMoney(sumR) + "</strong>";
 
+  const table = tb.closest("table");
+  const tfoot = table && table.querySelector("tfoot");
+  if (tfoot) {
+    let trEf = tfoot.querySelector("tr.fijos-totals--efectivo");
+    if (lista.length === 0) {
+      if (trEf) trEf.remove();
+    } else {
+      const sumEfectivo = lista.reduce((s, o) => s + montoDesdeGastoFijo(o), 0);
+      if (!trEf) {
+        trEf = document.createElement("tr");
+        trEf.className = "fijos-totals fijos-totals--efectivo";
+        tfoot.appendChild(trEf);
+      }
+      trEf.innerHTML =
+        '<td colspan="3"><strong>Total (real sustituye esperado)</strong></td>' +
+        '<td colspan="4"><strong>' +
+        formatMoney(sumEfectivo) +
+        "</strong></td>";
+    }
+  }
+
   tb.innerHTML = "";
   lista.forEach((o) => {
     const tr = document.createElement("tr");
@@ -1026,11 +1047,11 @@ function aplicarUI() {
   }
   if (hHelp) hHelp.classList.toggle("hidden", periodo !== "mes");
 
-  const fijosEsperadoTabla = gastosFijosGlobal
+  const fijosMontoTabla = gastosFijosGlobal
     .filter((o) => o.mes === mes)
-    .reduce((s, o) => s + (Number(o.esperado) || 0), 0);
+    .reduce((s, o) => s + montoDesdeGastoFijo(o), 0);
 
-  renderTotales(totales, saldoRemanente, fijosEsperadoTabla);
+  renderTotales(totales, saldoRemanente, fijosMontoTabla);
   renderReporteSummaries(totales);
   renderLista(datosHistorialLista, periodo);
   renderObjetivos();
@@ -1204,16 +1225,19 @@ syncNavActive("home");
 
 onSnapshot(collection(db, "finanzas"), (snapshot) => {
   datosGlobal = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+  window._datosGlobal = datosGlobal;
   aplicarUI();
 });
 
 onSnapshot(collection(db, "objetivos"), (snapshot) => {
   objetivosGlobal = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+  window._objetivosGlobal = objetivosGlobal;
   aplicarUI();
 });
 
 onSnapshot(collection(db, "gastos_fijos"), (snapshot) => {
   gastosFijosGlobal = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+  window._gastosFijosGlobal = gastosFijosGlobal;
   aplicarUI();
 });
 
